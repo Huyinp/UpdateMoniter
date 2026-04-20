@@ -36,17 +36,17 @@
             </td>
             
             <!-- 云更新 -->
-            <td class="time-cell">{{ formatTime(game.platforms['云更新']?.updateTime) }}</td>
-            <td class="size-cell">{{ formatSize(game.platforms['云更新']?.fileSize) }}</td>
-            <td class="size-cell">{{ formatSize(game.platforms['云更新']?.totalSize) }}</td>
+            <td class="time-cell platform-yun">{{ formatTime(game.platforms['云更新']?.updateTime) }}</td>
+            <td class="size-cell platform-yun">{{ formatSize(game.platforms['云更新']?.fileSize) }}</td>
+            <td class="size-cell platform-yun">{{ formatSize(game.platforms['云更新']?.totalSize) }}</td>
             
             <!-- 易乐游 -->
-            <td class="time-cell">{{ formatTime(game.platforms['易乐游']?.updateTime) }}</td>
+            <td class="time-cell platform-yile">{{ formatTime(game.platforms['易乐游']?.updateTime) }}</td>
             
             <!-- 顺网科技 -->
-            <td class="time-cell">{{ formatTime(game.platforms['顺网科技']?.updateTime) }}</td>
-            <td class="size-cell">{{ formatSize(game.platforms['顺网科技']?.fileSize) }}</td>
-            <td class="size-cell">{{ formatSize(game.platforms['顺网科技']?.totalSize) }}</td>
+            <td class="time-cell platform-shun">{{ formatTime(game.platforms['顺网科技']?.updateTime) }}</td>
+            <td class="size-cell platform-shun">{{ formatSize(game.platforms['顺网科技']?.fileSize) }}</td>
+            <td class="size-cell platform-shun">{{ formatSize(game.platforms['顺网科技']?.totalSize) }}</td>
           </tr>
           <tr v-if="filteredResources.length === 0">
             <td colspan="8" class="empty-row">
@@ -171,6 +171,12 @@ function formatSize(sizeMB: number | undefined): string {
   text-align: center;
   font-size: 12px;
   border-bottom: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+}
+
+.resource-table th:last-child,
+.resource-table td:last-child {
+  border-right: none;
 }
 
 .resource-table thead th {
@@ -194,6 +200,22 @@ function formatSize(sizeMB: number | undefined): string {
   font-weight: 500;
 }
 
+.sub-header th:nth-child(2),
+.sub-header th:nth-child(3),
+.sub-header th:nth-child(4) {
+  background-color: #dbeafe !important;
+}
+
+.sub-header th:nth-child(5) {
+  background-color: #fef3c7 !important;
+}
+
+.sub-header th:nth-child(6),
+.sub-header th:nth-child(7),
+.sub-header th:nth-child(8) {
+  background-color: #dcfce7 !important;
+}
+
 .game-col {
   text-align: left !important;
   width: 150px;
@@ -213,6 +235,18 @@ function formatSize(sizeMB: number | undefined): string {
 .time-cell {
   color: var(--text-secondary);
   white-space: nowrap;
+}
+
+.platform-yun {
+  background-color: #eff6ff;
+}
+
+.platform-yile {
+  background-color: #fffbeb;
+}
+
+.platform-shun {
+  background-color: #f0fdf4;
 }
 
 .size-cell {

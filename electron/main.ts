@@ -2,6 +2,16 @@ import { app, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import axios from 'axios'
 import * as cheerio from 'cheerio'
+import { Agent as HttpsAgent } from 'https'
+
+const httpsAgent = new HttpsAgent({ 
+  keepAlive: false,
+  rejectUnauthorized: false
+})
+
+axios.defaults.proxy = false
+process.env.NO_PROXY = '*'
+process.env.no_proxy = '*'
 
 // 禁用 GPU 加速（某些环境需要）
 app.disableHardwareAcceleration()
@@ -94,8 +104,12 @@ async function scrapeYungengxin(maxPages: number = 10): Promise<void> {
       
       const response = await axios.get(url, { 
         timeout: 15000,
+        httpsAgent,
         headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+          'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+          'Referer': 'https://yungengxin.com/'
         }
       })
       
@@ -131,7 +145,13 @@ async function scrapeYungengxin(maxPages: number = 10): Promise<void> {
       
       if (!foundData || rowCount === 0) break
     } catch (error) {
-      console.error(`Error scraping yungengxin page ${page}:`, (error as Error).message)
+      const err = error as any
+      console.error(`Error scraping yungengxin page ${page}:`, err.message)
+      if (err.response) {
+        console.error('Status:', err.response.status)
+        console.error('Headers:', err.response.headers)
+        console.error('Data:', err.response.data?.substring?.(0, 500) || err.response.data)
+      }
       break
     }
   }
@@ -152,8 +172,12 @@ async function scrapeYileyoo(maxPages: number = 10): Promise<void> {
       
       const response = await axios.get(url, { 
         timeout: 15000,
+        httpsAgent,
         headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+          'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+          'Referer': 'https://www.yileyoo.com/'
         }
       })
       
@@ -202,9 +226,12 @@ async function scrapeIcafe8(maxPages: number = 10): Promise<void> {
       
       const response = await axios.get(url, { 
         timeout: 15000,
+        httpsAgent,
         headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-          'Accept': 'application/json'
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'Accept': 'application/json, text/plain, */*',
+          'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+          'Referer': 'https://home.icafe8.com/'
         }
       })
       
